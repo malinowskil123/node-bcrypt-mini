@@ -1,43 +1,63 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import './App.css';
+import React, { Component } from 'react'
+import axios from 'axios'
+import './App.css'
 
 class App extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       email: '',
       password: '',
       loggedInUser: {}
-    };
+    }
   }
 
-  async login() {}
+  async login() {
+    let { email, password } = this.state
+    let result = await axios.post('/auth/login', { email, password })
+    this.setState({
+      loggedInUser: result.data,
+      email: '',
+      password: ''
+    })
+  }
 
-  async signup() {}
+  async signup() {
+    let { email, password } = this.state
+    let result = await axios.post('/auth/signup', { email, password })
+    this.setState({
+      loggedInUser: result.data,
+      email: '',
+      password: ''
+    })
+  }
 
-  logout() {}
+  logout() {
+    axios.delete('/auth/logout')
+    this.setState({ loggedInUser: {} })
+  }
 
   render() {
-    let { loggedInUser, email, password } = this.state;
+    let { loggedInUser, email, password } = this.state
+    // console.log(loggedInUser)
     return (
-      <div className="form-container done">
-        <div className="login-form">
+      <div className='form-container done'>
+        <div className='login-form'>
           <h3>Auth w/ Bcrypt</h3>
           <div>
             <input
               value={email}
               onChange={e => this.setState({ email: e.target.value })}
-              type="text"
-              placeholder="Email"
+              type='text'
+              placeholder='Email'
             />
           </div>
           <div>
             <input
               value={password}
-              type="password"
+              type='password'
               onChange={e => this.setState({ password: e.target.value })}
-              placeholder="password"
+              placeholder='password'
             />
           </div>
           {loggedInUser.email ? (
@@ -55,8 +75,8 @@ class App extends Component {
         <p> {loggedInUser.email ? JSON.stringify(loggedInUser) : 'No User'} </p>
         <br />
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App
